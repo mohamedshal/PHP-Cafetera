@@ -2,8 +2,6 @@
 require_once __DIR__ . "/../../config/Database.php";
 require_once __DIR__ . "/../../models/User.php";
 
-session_start();
-
 $database = new Database();
 $db = $database->connect();
 

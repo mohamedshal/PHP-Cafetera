@@ -3,8 +3,6 @@ require_once __DIR__ . "/../../config/Database.php";
 require_once __DIR__ . "/../../models/User.php";
 require_once __DIR__ . "/../../models/Room.php";
 
-session_start();
-
 // Check admin access
 require_once __DIR__ . "/auth_check.php";
 
