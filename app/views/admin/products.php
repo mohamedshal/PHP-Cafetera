@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="/PHP-Cafetera/public/assets/css/bootstrap.css">
-<link rel="stylesheet" href="/PHP-Cafetera/public/assets/css/navbar.css">
+<link rel="stylesheet" href="/PHP-Cafetera/public/assets/css/sidebar.css">
 
 <style>
   .panel {
@@ -27,7 +27,7 @@
 <div class="app">
   <?php
     $active = 'products';
-    require_once __DIR__ . '/../layouts/navbar.php';
+    require_once __DIR__ . '/../layouts/sidebar.php';
     require_once __DIR__ . '/../../controllers/productController.php';
 
     $productController = new ProductController();

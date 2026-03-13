@@ -9,7 +9,7 @@ define('DB_PASS', '');
 define('BASE_URL',  'http://localhost/PHP-CAFETERA/public');
 define('PRODUCTS_PER_PAGE', 5); // PAGINATION
 
-define('UPLOAD_PATH', dirname(__DIR__, 2), 'public/assets/uploads/products/' );
+// define('UPLOAD_PATH', dirname(__DIR__, 2), 'public/assets/uploads/products/' );
 define('UPLOAD_URL', BASE_URL . '/assets/uploads/products/');
 
 define('DEBUG_MODE', true); // for debugging 
