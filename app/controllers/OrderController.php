@@ -41,6 +41,12 @@ class OrderController
         if (empty($_SESSION['cart'])) {
             return null;
         }
+
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            return null;
+        }
+
         $this->conn->beginTransaction();
 
         try {
@@ -54,11 +60,12 @@ class OrderController
             }
 
             $orderStmt = $this->conn->prepare("
-                INSERT INTO orders (room_id, notes, total_price, created_at)
-                VALUES (?, ?, ?, NOW())
+                INSERT INTO orders (user_id, room_id, notes, total_price, created_at)
+                VALUES (?, ?, ?, ?, NOW())
             ");
 
             $orderStmt->execute([
+                $userId,
                 $roomId,
                 $notes,
                 $totalPrice
@@ -99,13 +106,20 @@ class OrderController
 
     public function getLatestOrder()
     {
-        $stmt = $this->conn->query("
-        SELECT *
-        FROM orders_with_rooms
-        ORDER BY created_at DESC
-        LIMIT 1
-    ");
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            return null;
+        }
 
+        $stmt = $this->conn->prepare("
+            SELECT o.*, r.name as room_name
+            FROM orders o
+            LEFT JOIN rooms r ON o.room_id = r.id
+            WHERE o.user_id = ?
+            ORDER BY o.created_at DESC
+            LIMIT 1
+        ");
+        $stmt->execute([$userId]);
         $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$order) {
@@ -113,10 +127,11 @@ class OrderController
         }
 
         $itemsStmt = $this->conn->prepare("
-        SELECT *
-        FROM order_items_with_products
-        WHERE order_id = ?
-    ");
+            SELECT oi.*, p.name as product_name, p.image as product_image
+            FROM order_items oi
+            LEFT JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id = ?
+        ");
 
         $itemsStmt->execute([$order['id']]);
 
@@ -124,5 +139,53 @@ class OrderController
             'order' => $order,
             'items' => $itemsStmt->fetchAll(PDO::FETCH_ASSOC)
         ];
+    }
+
+    public function getByUserId(int $userId)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT o.*, r.name as room_name
+            FROM orders o
+            LEFT JOIN rooms r ON o.room_id = r.id
+            WHERE o.user_id = ?
+            ORDER BY o.created_at DESC
+        ");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getById(int $orderId)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT o.*, r.name as room_name, u.name as user_name
+            FROM orders o
+            LEFT JOIN rooms r ON o.room_id = r.id
+            LEFT JOIN users u ON o.user_id = u.id
+            WHERE o.id = ?
+        ");
+        $stmt->execute([$orderId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getItems(int $orderId)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT oi.*, p.name as product_name, p.image as product_image
+            FROM order_items oi
+            LEFT JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id = ?
+        ");
+        $stmt->execute([$orderId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function cancel(int $orderId, int $userId)
+    {
+        $stmt = $this->conn->prepare("
+            UPDATE orders 
+            SET status = 'cancelled' 
+            WHERE id = ? AND user_id = ? AND status = 'processing'
+        ");
+        return $stmt->execute([$orderId, $userId]);
     }
 }
