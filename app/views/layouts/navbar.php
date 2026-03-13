@@ -1,10 +1,10 @@
 <style>
 .navbar{
-    background-color:#4E342E !important; /* coffee brown */
+    background-color:#4E342E !important;
 }
 
 .navbar .navbar-brand{
-    color:#FFD54F !important; /* warm yellow */
+    color:#FFD54F !important;
     font-weight:bold;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .navbar-coffee{
-    background-color: #6f4e37; /* coffee brown */
+    background-color: #6f4e37;
 }
 
 .navbar-coffee .navbar-brand,
@@ -37,7 +37,7 @@
 }
 
 .navbar-coffee .nav-link:hover{
-    color: #ffd700; /* coffee shop yellow highlight */
+    color: #ffd700; 
 }
 </style>
 
@@ -55,27 +55,40 @@
       <ul class="navbar-nav me-auto">
 
         <li class="nav-item">
-          <a class="nav-link active" href="/">Home</a>
+          <a class="nav-link" href="/">Home</a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/products">Products</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/orders">Orders</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/users">Users</a>
-        </li>
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/products">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/orders">Orders</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/users">Users</a>
+          </li>
+        <?php else: ?>
+          <li class="nav-item">
+            <a class="nav-link" href="/my-orders">My Orders</a>
+          </li>
+        <?php endif; ?>
 
       </ul>
 
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
-        </li>
+        <?php if (isset($_SESSION['user_id'])): ?>
+          <li class="nav-item">
+            <span class="nav-link"><?= htmlspecialchars($_SESSION['user_name'] ?? '') ?></span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+        <?php else: ?>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+        <?php endif; ?>
       </ul>
 
     </div>
