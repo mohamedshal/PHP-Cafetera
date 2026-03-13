@@ -62,7 +62,25 @@
                             <div class="card h-100">
                                 <a href="/cart/add?id=<?= (int) $product['id'] ?>" class="text-decoration-none">
                                     <?php if (!empty($product['image'])): ?>
-                                        <img src="assets/images/<?= htmlspecialchars($product['image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
+                                        <?php
+                                            $imageFile = (string) $product['image'];
+                                            $productImageFs = __DIR__ . '/../../../public/assets/images/products/' . $imageFile;
+                                            $legacyImageFs = __DIR__ . '/../../../public/assets/images/' . $imageFile;
+                                            if (file_exists($productImageFs)) {
+                                                $imageSrc = '/assets/images/products/' . rawurlencode($imageFile);
+                                            } elseif (file_exists($legacyImageFs)) {
+                                                $imageSrc = '/assets/images/' . rawurlencode($imageFile);
+                                            } else {
+                                                $imageSrc = '';
+                                            }
+                                        ?>
+                                        <?php if ($imageSrc !== ''): ?>
+                                            <img src="<?= htmlspecialchars($imageSrc) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['name']) ?>">
+                                        <?php else: ?>
+                                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+                                                <span class="text-muted">No Image</span>
+                                            </div>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
                                             <span class="text-muted">No Image</span>

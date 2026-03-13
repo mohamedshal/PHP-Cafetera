@@ -74,6 +74,13 @@
             </div>
           <?php break; ?>
 
+          <?php case 'product_in_use': ?>
+            <div class="alert alert-danger alert-dismissible fade show">
+              Cannot delete this product because it is already used in orders.
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          <?php break; ?>
+
         <?php endswitch; ?>
       <?php endif; ?>
 
@@ -106,11 +113,27 @@
                   <td><?= $index + 1 ?></td>
 
                   <td>
+                    <?php
+                      $imageFile = (string) $product['image'];
+                      $productImageFs = __DIR__ . '/../../../public/assets/images/products/' . $imageFile;
+                      $legacyImageFs = __DIR__ . '/../../../public/assets/images/' . $imageFile;
+                      if (file_exists($productImageFs)) {
+                        $imageSrc = '/assets/images/products/' . rawurlencode($imageFile);
+                      } elseif (file_exists($legacyImageFs)) {
+                        $imageSrc = '/assets/images/' . rawurlencode($imageFile);
+                      } else {
+                        $imageSrc = '';
+                      }
+                    ?>
+                    <?php if ($imageSrc !== ''): ?>
                     <img 
-                      src="/PHP-CAFETERA/public/assets/images/products/<?= htmlspecialchars($product['image']) ?>" 
+                      src="<?= htmlspecialchars($imageSrc) ?>" 
                       alt="<?= htmlspecialchars($product['name']) ?>"
                       class="product-img"
                     >
+                    <?php else: ?>
+                    <span class="text-muted small">No Image</span>
+                    <?php endif; ?>
                   </td>
 
                   <td><?= htmlspecialchars($product['name']) ?></td>

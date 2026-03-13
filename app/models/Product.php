@@ -100,4 +100,16 @@ class Product {
             return false;
         }
     }
+
+    public function isUsedInOrders(int $id): bool {
+        try {
+            $sql = "SELECT COUNT(*) FROM order_items WHERE product_id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return (int)$stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            return true;
+        }
+    }
 }

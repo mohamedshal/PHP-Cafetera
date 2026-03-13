@@ -71,9 +71,23 @@ $items = $orderController->getItems($orderId);
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <?php if (!empty($item['product_image'])): ?>
-                                                    <img src="assets/images/<?= htmlspecialchars($item['product_image']) ?>" 
-                                                         alt="<?= htmlspecialchars($item['product_name']) ?>" 
-                                                         style="width: 50px; height: 50px; object-fit: cover;" class="me-2">
+                                                    <?php
+                                                        $imageFile = (string) $item['product_image'];
+                                                        $productImageFs = __DIR__ . '/../../../public/assets/images/products/' . $imageFile;
+                                                        $legacyImageFs = __DIR__ . '/../../../public/assets/images/' . $imageFile;
+                                                        if (file_exists($productImageFs)) {
+                                                            $imageSrc = '/assets/images/products/' . rawurlencode($imageFile);
+                                                        } elseif (file_exists($legacyImageFs)) {
+                                                            $imageSrc = '/assets/images/' . rawurlencode($imageFile);
+                                                        } else {
+                                                            $imageSrc = '';
+                                                        }
+                                                    ?>
+                                                    <?php if ($imageSrc !== ''): ?>
+                                                        <img src="<?= htmlspecialchars($imageSrc) ?>" 
+                                                             alt="<?= htmlspecialchars($item['product_name']) ?>" 
+                                                             style="width: 50px; height: 50px; object-fit: cover;" class="me-2">
+                                                    <?php endif; ?>
                                                 <?php endif; ?>
                                                 <?= htmlspecialchars($item['product_name']) ?>
                                             </div>

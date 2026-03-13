@@ -70,6 +70,15 @@ class User
         return $stmt->execute();
     }
 
+    function hasOrders($id)
+    {
+        $query = "SELECT COUNT(*) FROM orders WHERE user_id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
     function updatePassword($id, $password)
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);

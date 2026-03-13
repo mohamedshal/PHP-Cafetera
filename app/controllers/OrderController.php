@@ -186,6 +186,7 @@ class OrderController
             SET status = 'cancelled' 
             WHERE id = ? AND user_id = ? AND status = 'processing'
         ");
-        return $stmt->execute([$orderId, $userId]);
+            $stmt->execute([$orderId, $userId]);
+            return $stmt->rowCount() > 0;
     }
 }

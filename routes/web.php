@@ -60,6 +60,12 @@ switch ($uri) {
         $controller->create();
         break;
 
+    case "/admin/users/delete":
+        require_once __DIR__ . "/../app/controllers/UserController.php";
+        $controller = new UserController($db);
+        $controller->handleDeleteRequest();
+        break;
+
     case "/admin/products":
         require_once __DIR__ . "/../app/views/admin/products.php";
         break;
@@ -158,9 +164,22 @@ switch ($uri) {
             header("Location: /login");
             exit();
         }
+        $orderId = (int)($_GET['id'] ?? 0);
+        if ($orderId <= 0) {
+            header("Location: /my-orders?error=Invalid order id");
+            exit();
+        }
         $controller = new OrderController($db);
-        $controller->cancel((int)$_GET['id'], $_SESSION['user_id']);
-        header("Location: /my-orders?success=Order cancelled successfully");
+        try {
+            $cancelled = $controller->cancel($orderId, (int)$_SESSION['user_id']);
+            if ($cancelled) {
+                header("Location: /my-orders?success=Order cancelled successfully");
+            } else {
+                header("Location: /my-orders?error=Order cannot be cancelled");
+            }
+        } catch (Throwable $e) {
+            header("Location: /my-orders?error=Failed to cancel order");
+        }
         exit();
         break;
 

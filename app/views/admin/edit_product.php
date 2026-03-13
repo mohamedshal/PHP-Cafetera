@@ -153,12 +153,28 @@
             <h5 class="mb-3">Media</h5>
 
             <div class="upload-box">
+              <?php
+                $imageFile = (string) $product['image'];
+                $productImageFs = __DIR__ . '/../../../public/assets/images/products/' . $imageFile;
+                $legacyImageFs = __DIR__ . '/../../../public/assets/images/' . $imageFile;
+                if (file_exists($productImageFs)) {
+                  $imageSrc = '/assets/images/products/' . rawurlencode($imageFile);
+                } elseif (file_exists($legacyImageFs)) {
+                  $imageSrc = '/assets/images/' . rawurlencode($imageFile);
+                } else {
+                  $imageSrc = '';
+                }
+              ?>
+              <?php if ($imageSrc !== ''): ?>
               <img 
                 id="preview" 
-                src="/PHP-CAFETERA/public/assets/images/products/<?= htmlspecialchars($product['image']) ?>" 
+                src="<?= htmlspecialchars($imageSrc) ?>" 
                 alt="Current Image"
                 style="max-width:100%; max-height:220px; border-radius:10px;"
               >
+              <?php else: ?>
+              <div id="preview" class="text-muted">No current image</div>
+              <?php endif; ?>
               <label class="upload-label" for="image" id="uploadLabel" style="display:none;">
                 <div class="upload-hint">Click to change image</div>
               </label>

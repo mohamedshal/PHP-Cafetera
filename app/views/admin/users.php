@@ -14,6 +14,9 @@ $db = $database->connect();
 $userModel = new User($db);
 $users = $userModel->getAll();
 
+$success = $_GET["success"] ?? null;
+$error = $_GET["error"] ?? null;
+
 // Fetch all rooms for reference
 $roomModel = new Room($db);
 $rooms = $roomModel->getAll();
@@ -81,6 +84,14 @@ foreach ($rooms as $room) {
             </div>
 
             <div class="card-body">
+
+                <?php if ($success): ?>
+                    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+                <?php endif; ?>
+
+                <?php if ($error): ?>
+                    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
 
                 <?php if (!empty($users)): ?>
 
@@ -188,10 +199,10 @@ foreach ($rooms as $room) {
 
                                         <td class="text-center">
 
-                                            <form action="/users/<?= $user[
-                                                "id"
-                                            ] ?>/delete" method="POST"
+                                            <form action="/admin/users/delete" method="POST"
                                                 style="display:inline">
+
+                                                <input type="hidden" name="id" value="<?= (int) $user['id'] ?>">
 
                                                 <button class="btn btn-sm btn-outline-danger">
                                                     Delete

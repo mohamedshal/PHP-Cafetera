@@ -122,20 +122,26 @@ class ProductController {
     public function deleteProduct() {
 
         $id      = (int)($_GET['id']    ?? 0);
-        $image   = $_GET['image']       ?? '';
+        $image   = basename($_GET['image'] ?? '');
 
         if ($id <= 0) {
             header("Location: /admin/products?msg=error");
             exit();
         }
 
-        // delete image file from server
-        $imagePath = $this->uploadDir . $image;
-        if (file_exists($imagePath)) {
-            unlink($imagePath);
+        if ($this->productModel->isUsedInOrders($id)) {
+            header("Location: /admin/products?msg=product_in_use");
+            exit();
         }
 
         if ($this->productModel->delete($id)) {
+            // delete image file from server only after successful DB delete
+            if ($image !== '') {
+                $imagePath = $this->uploadDir . $image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
             header("Location: /admin/products?msg=product_deleted");
             exit();
         } else {
@@ -168,17 +174,17 @@ class ProductController {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['add_product'])) {
     $controller = new ProductController();
     $controller->createProduct();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['update_product'])) {
     $controller = new ProductController();
     $controller->updateProduct();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete_product'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET' && isset($_GET['delete_product'])) {
     $controller = new ProductController();
     $controller->deleteProduct();
 }
