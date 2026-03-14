@@ -227,6 +227,19 @@ switch ($uri) {
 
 
     default:
+     if (strpos($uri, '/assets/') === 0) {
+            $file = __DIR__ . '/..' . $uri;
+            if (is_file($file)) {
+                $ext = pathinfo($uri, PATHINFO_EXTENSION);
+                $mimeTypes = [
+                    'png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
+                    'gif' => 'image/gif', 'css' => 'text/css', 'js' => 'application/javascript'
+                ];
+                header("Content-Type: " . ($mimeTypes[$ext] ?? 'text/plain'));
+                readfile($file);
+                exit();
+            }
+        }
         http_response_code(404);
         echo "<h1>404 - Page Not Found</h1>";
         echo "<p>Requested: " . htmlspecialchars($uri) . "</p>";
