@@ -1,0 +1,71 @@
+body.login-page {
+  background-color: #f5f6f8;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+.login-box {
+  width: 420px;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.custom-input {
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.custom-input:focus {
+  box-shadow: none;
+  border-color: #6366f1;
+}
+
+.google-btn {
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+/* Login Button Gradient */
+.login-btn {
+  height: 48px;
+  border-radius: 8px;
+  border: none;
+  color: #fff !important;
+  font-weight: 600;
+  background-color: #664d03 !important;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+.forgot-link {
+  font-size: 14px;
+  text-decoration: none;
+}

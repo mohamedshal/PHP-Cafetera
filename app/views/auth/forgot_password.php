@@ -1,6 +1,6 @@
 <?php
-$error = $error ?? ($_GET["error"] ?? null);
-$success = $success ?? ($_GET["success"] ?? null);
+$error = $_GET["error"] ?? null;
+$success = $_GET["success"] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +8,7 @@ $success = $success ?? ($_GET["success"] ?? null);
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cafeteria Login</title>
+<title>Forgot Password - Cafeteria</title>
 <link rel="stylesheet" href="/assets/css/login.css">
 </head>
 <?php include __DIR__ . "/../layouts/jsCDN.php"; ?>
@@ -18,8 +18,8 @@ $success = $success ?? ($_GET["success"] ?? null);
 
     <div class="login-box">
 
-        <h1 class="fw-bold mb-1">Login</h1>
-        <p class="text-muted mb-4">Hi, Welcome back 👋</p>
+        <h1 class="fw-bold mb-1">Forgot Password</h1>
+        <p class="text-muted mb-4">Enter your email to reset your password</p>
 
         <?php if ($error) { ?>
             <div class="alert alert-danger text-center">
@@ -27,39 +27,31 @@ $success = $success ?? ($_GET["success"] ?? null);
             </div>
         <?php } ?>
 
+        <?php if ($success) { ?>
+            <div class="alert alert-success text-center">
+                <?php echo htmlspecialchars($success); ?>
+            </div>
+        <?php } ?>
+
         <form method="post">
 
-            <!-- Email -->
             <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input
                     type="email"
                     name="email"
                     class="form-control custom-input"
-                    placeholder="E.g. johndoe@email.com"
+                    placeholder="Enter your email"
                     required>
             </div>
 
-            <!-- Password -->
-            <div class="mb-2">
-                <label class="form-label">Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    class="form-control custom-input"
-                    placeholder="Enter your password"
-                    required>
-            </div>
-
-            <!-- Remember + Forgot -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
-            </div>
-
-            <!-- Login Button -->
             <button class="btn login-btn w-100">
-                Login
+                Send Reset Link
             </button>
+
+            <p class="text-center mt-3">
+                Remember your password? <a href="/login" class="forgot-link">Login</a>
+            </p>
 
         </form>
     </div>

@@ -44,7 +44,7 @@ CREATE TABLE `orders` (
   `room_id` int DEFAULT NULL,
   `notes` text,
   `total_price` decimal(10,2) DEFAULT NULL,
-  `status` enum('processing','out_for_delivery','done') DEFAULT 'processing',
+  `status` enum('processing','out_for_delivery','done','cancelled') DEFAULT 'processing',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
